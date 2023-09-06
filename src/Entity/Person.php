@@ -21,6 +21,9 @@ class Person
     #[ORM\OneToMany(mappedBy: 'person', targetEntity: Casting::class, orphanRemoval: true)]
     private Collection $casting;
 
+    #[ORM\Column(length: 100)]
+    private ?string $lastname = null;
+
     public function __construct()
     {
         $this->casting = new ArrayCollection();
@@ -69,6 +72,18 @@ class Person
                 $casting->setPerson(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): static
+    {
+        $this->lastname = $lastname;
 
         return $this;
     }
