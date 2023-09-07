@@ -19,14 +19,14 @@ class Person
     private ?string $firstname = null;
 
     #[ORM\OneToMany(mappedBy: 'person', targetEntity: Casting::class, orphanRemoval: true)]
-    private Collection $casting;
+    private Collection $castings;
 
     #[ORM\Column(length: 100)]
     private ?string $lastname = null;
 
     public function __construct()
     {
-        $this->casting = new ArrayCollection();
+        $this->castings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -51,13 +51,13 @@ class Person
      */
     public function getCasting(): Collection
     {
-        return $this->casting;
+        return $this->castings;
     }
 
     public function addCasting(Casting $casting): static
     {
-        if (!$this->casting->contains($casting)) {
-            $this->casting->add($casting);
+        if (!$this->castings->contains($casting)) {
+            $this->castings->add($casting);
             $casting->setPerson($this);
         }
 
@@ -66,7 +66,7 @@ class Person
 
     public function removeCasting(Casting $casting): static
     {
-        if ($this->casting->removeElement($casting)) {
+        if ($this->castings->removeElement($casting)) {
             // set the owning side to null (unless already changed)
             if ($casting->getPerson() === $this) {
                 $casting->setPerson(null);

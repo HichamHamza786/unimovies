@@ -46,18 +46,18 @@ class Movie
     #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Review::class, orphanRemoval: true)]
     private Collection $reviews;
 
-    #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Genre::class, orphanRemoval: true)]
-    private Collection $genre;
+    #[ORM\ManyToMany(inversedBy: 'movie', targetEntity: Genre::class, orphanRemoval: true)]
+    private Collection $genres;
 
     #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Casting::class, orphanRemoval: true)]
-    private Collection $casting;
+    private Collection $castings;
 
     public function __construct()
     {
         $this->seasons = new ArrayCollection();
         $this->reviews = new ArrayCollection();
-        $this->genre = new ArrayCollection();
-        $this->casting = new ArrayCollection();
+        $this->genres = new ArrayCollection();
+        $this->castings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -226,14 +226,14 @@ class Movie
      */
     public function getGenre(): Collection
     {
-        return $this->genre;
+        return $this->genres;
     }
 
     public function addGenre(Genre $genre): static
     {
-        if (!$this->genre->contains($genre)) {
-            $this->genre->add($genre);
-            $genre->setMovie($this);
+        if (!$this->genres->contains($genre)) {
+            $this->genres->add($genre);
+            $genre->addMovie($this);
         }
 
         return $this;
@@ -241,11 +241,9 @@ class Movie
 
     public function removeGenre(Genre $genre): static
     {
-        if ($this->genre->removeElement($genre)) {
+        if ($this->genres->removeElement($genre)) {
             // set the owning side to null (unless already changed)
-            if ($genre->getMovie() === $this) {
-                $genre->setMovie(null);
-            }
+            $genre->removeMovie($this);
         }
 
         return $this;
@@ -256,13 +254,13 @@ class Movie
      */
     public function getCasting(): Collection
     {
-        return $this->casting;
+        return $this->castings;
     }
 
     public function addCasting(Casting $casting): static
     {
-        if (!$this->casting->contains($casting)) {
-            $this->casting->add($casting);
+        if (!$this->castings->contains($casting)) {
+            $this->castings->add($casting);
             $casting->setMovie($this);
         }
 
@@ -271,7 +269,7 @@ class Movie
 
     public function removeCasting(Casting $casting): static
     {
-        if ($this->casting->removeElement($casting)) {
+        if ($this->castings->removeElement($casting)) {
             // set the owning side to null (unless already changed)
             if ($casting->getMovie() === $this) {
                 $casting->setMovie(null);

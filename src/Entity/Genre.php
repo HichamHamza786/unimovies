@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\GenreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GenreRepository::class)]
@@ -16,9 +18,13 @@ class Genre
     #[ORM\Column(length: 100)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'genre')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Movie $movie = null;
+    #[ORM\ManyToMany(targetEntity:Movie::class, mappedBy: 'genre')]
+    private Collection $movies;
+
+    public function __construct()
+    {
+        $this->movies = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -37,14 +43,26 @@ class Genre
         return $this;
     }
 
-    public function getMovie(): ?Movie
+    /**
+     * @return Collection<int, Movie>
+     */
+    public function getMovies(): Collection
     {
-        return $this->movie;
+        return $this->movies;
+    }
+    
+    public function addMovie(?Movie $movie): static
+    {
+        if (!$this->movies->contains($movie)) {
+            $this->movies[] = $movie;
+        };
+
+        return $this;
     }
 
-    public function setMovie(?Movie $movie): static
+    public function removeMovie(?Movie $movie): static
     {
-        $this->movie = $movie;
+        $this->movies->removeElement($movie);
 
         return $this;
     }

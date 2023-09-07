@@ -20,11 +20,11 @@ class Casting
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $creditOrder = null;
 
-    #[ORM\ManyToOne(inversedBy: 'casting')]
+    #[ORM\ManyToOne(targetEntity:Person::class, inversedBy: 'casting')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Person $person = null;
 
-    #[ORM\ManyToOne(inversedBy: 'casting')]
+    #[ORM\ManyToOne(targetEntity:Movie::class, inversedBy: 'casting')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Movie $movie = null;
 
