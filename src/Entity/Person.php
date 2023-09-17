@@ -6,6 +6,7 @@ use App\Repository\PersonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PersonRepository::class)]
 class Person
@@ -49,7 +50,7 @@ class Person
     /**
      * @return Collection<int, Casting>
      */
-    public function getCasting(): Collection
+    public function getCastings(): Collection
     {
         return $this->castings;
     }

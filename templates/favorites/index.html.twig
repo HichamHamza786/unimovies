@@ -1,20 +1,43 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Hello FavoritesController!{% endblock %}
-
+{% block favoriteActive %}active{% endblock %}
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="container-xl bg-light p-5 border-top">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        <div class="row mb-2">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/var/www/html/ProjetsPersos/unimovies/src/Controller/FavoritesController.php'|file_link(0) }}">src/Controller/FavoritesController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/var/www/html/ProjetsPersos/unimovies/templates/favorites/index.html.twig'|file_link(0) }}">templates/favorites/index.html.twig</a></code></li>
-    </ul>
-</div>
+            <h2 class="text-muted fw-bold mb-4">Ma liste</h2>
+
+            {% include "fragments/_flash_message.html.twig" %}
+
+            {% for movie in favorites %}
+                
+            <div class="col-6">
+
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm bg-white position-relative">
+                    <div class="col-4 movie__poster">
+                        <img src={{movie.poster}} class="img-fluid">
+                    </div>
+                    <div class="col-8 p-4 d-flex flex-column position-static">
+                        {% include "fragments/_toggle_button.html.twig" %}
+                        <strong class="d-inline-block mb-2 text-primary">Film</strong>
+                        <h3 class="mb-1">{{movie.title}}</h3>
+                        <div class="mb-1 text-muted">{{movie.duration}} min</div>
+                        <a href="{{path('app_movie_show',{id:movie.id,slug:movie.slug})}}" class="fs-1 mt-3 text-danger align-self-start">
+                            <i class="bi bi-arrow-right-square"></i>
+                        </a>
+                    </div>
+                </div>
+            
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <div class="col">
+            <a href="{{path('app_favorites_empty')}}" class="btn btn-danger btn-sm" onclick="return confirm('Vider votre liste de favoris ?');">Vider la liste</a>
+        </div>
+
+    </div>
 {% endblock %}

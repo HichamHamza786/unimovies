@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ReviewRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 class Review
@@ -12,24 +13,31 @@ class Review
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['movies'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['movies'])]
     private ?string $username = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['movies'])]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['movies'])]
     private ?string $content = null;
 
     #[ORM\Column]
+    #[Groups(['movies'])]
     private ?float $rating = null;
 
     #[ORM\Column]
+    #[Groups(['movies'])]
     private array $reactions = [];
 
     #[ORM\Column]
+    #[Groups(['movies'])]
     private ?\DateTimeImmutable $watchedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'reviews')]

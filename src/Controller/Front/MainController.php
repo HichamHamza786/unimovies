@@ -2,17 +2,21 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Movie;
+use App\Repository\MovieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
-    #[Route('/main', name: 'app_main')]
-    public function index(): Response
-    {
-        return $this->render('main/index.html.twig', [
-            'controller_name' => 'MainController',
+    #[Route('/', name: 'app_home')]
+    public function home(MovieRepository $movieRepository): Response
+    {   
+        $movies = $movieRepository->findAll();
+
+        return $this->render('main/home.html.twig', [
+            'movies' => $movies,
         ]);
     }
 }

@@ -10,6 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\MyMailerService;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Mime\Email; 
 
 #[Route('/back/movie')]
 class MovieController extends AbstractController
@@ -23,7 +26,7 @@ class MovieController extends AbstractController
     }
 
     #[Route('/new', name: 'app_back_movie_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, MyMailerService $mailer): Response
     {
         $movie = new Movie();
         $form = $this->createForm(MovieType::class, $movie);
@@ -32,6 +35,8 @@ class MovieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($movie);
             $entityManager->flush();
+
+            $mailer->alertToAdmin($movie->getTitle(),"movie_created.html.twig",["movie" => $movie]);
 
             return $this->redirectToRoute('app_back_movie_index', [], Response::HTTP_SEE_OTHER);
         }

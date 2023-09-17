@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MovieRepository::class)]
 class Movie
@@ -14,43 +15,61 @@ class Movie
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['movies'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['movies'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['movies'])]
     private ?\DateTimeInterface $releaseDate = null;
 
     #[ORM\Column]
+    #[Groups(['movies'])]
     private ?int $duration = null;
 
     #[ORM\Column(length: 10)]
+    #[Groups(['movies'])]
     private ?string $type = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['movies'])]
     private ?string $summary = null;
 
     #[ORM\Column(length: 5000)]
+    #[Groups(['movies'])]
     private ?string $synopsis = null;
 
     #[ORM\Column(length: 2083)]
+    #[Groups(['movies'])]
     private ?string $poster = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 2, scale: 1, nullable: true)]
+    #[Groups(['movies'])]
     private ?string $rating = null;
 
     #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Season::class, orphanRemoval: true)]
+    #[Groups(['movies'])]
     private Collection $seasons;
 
     #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Review::class, orphanRemoval: true)]
+    #[Groups(['movies'])]
     private Collection $reviews;
 
     #[ORM\ManyToMany(inversedBy: 'movie', targetEntity: Genre::class, orphanRemoval: true)]
+    #[Groups(['movies'])]
     private Collection $genres;
 
     #[ORM\OneToMany(mappedBy: 'movie', targetEntity: Casting::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['creditOrder' => 'ASC'])]
+    #[Groups(['movies'])]
     private Collection $castings;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['movies'])]
+    private ?string $slug = null;
 
     public function __construct()
     {
@@ -224,12 +243,12 @@ class Movie
     /**
      * @return Collection<int, Genre>
      */
-    public function getGenre(): Collection
+    public function getGenres(): Collection
     {
         return $this->genres;
     }
 
-    public function addGenre(Genre $genre): static
+    public function addGenres(Genre $genre): static
     {
         if (!$this->genres->contains($genre)) {
             $this->genres->add($genre);
@@ -252,12 +271,12 @@ class Movie
     /**
      * @return Collection<int, Casting>
      */
-    public function getCasting(): Collection
+    public function getCastings(): Collection
     {
         return $this->castings;
     }
 
-    public function addCasting(Casting $casting): static
+    public function addCastings(Casting $casting): static
     {
         if (!$this->castings->contains($casting)) {
             $this->castings->add($casting);
@@ -275,6 +294,18 @@ class Movie
                 $casting->setMovie(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }
