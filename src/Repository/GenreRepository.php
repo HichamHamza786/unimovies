@@ -39,6 +39,17 @@ class GenreRepository extends ServiceEntityRepository
         }
     }
 
+    public function findMoviesByGenre($genreId): array
+    {
+        return $this->createQueryBuilder('g')
+            ->join('g.movieGenres', 'mg')
+            ->join('mg.movie', 'm')
+            ->andWhere('g.id = :genreId')
+            ->setParameter('genreId', $genreId)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Genre[] Returns an array of Genre objects
 //     */

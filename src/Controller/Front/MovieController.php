@@ -4,6 +4,7 @@ namespace App\Controller\Front;
 
 use App\Model\Movies;
 use App\Repository\CastingRepository;
+use App\Repository\GenreRepository;
 use App\Repository\MovieRepository;
 use App\Repository\ReviewRepository;
 use App\Service\OmdbApiService;
@@ -15,14 +16,15 @@ use Symfony\Component\HttpFoundation\Request;
 class MovieController extends AbstractController
 {
     #[Route('/movie', name:'app_movie_list')]
-    public function list(MovieRepository $movieRepository, Request $request): Response
+    public function list(MovieRepository $movieRepository, GenreRepository $genreRepository, Request $request): Response
     {
     
         //  findAllBySearch, requete custom du repo
         $movies = $movieRepository->findAllBySearch($request->get("search"));
-
+        $genres = $genreRepository->findAll();
         return $this->render('movie/list.html.twig',[
-            'movies' => $movies
+            'movies' => $movies,
+            'genres' => $genres
         ]);
     }
 

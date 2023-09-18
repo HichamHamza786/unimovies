@@ -86,14 +86,4 @@ class MovieRepository extends ServiceEntityRepository
         // returns an array of arrays (i.e. a raw data set)
         return $resultSet->fetchAssociative();
     }
-
-    //    public function findOneBySomeField($value): ?Movie
-    //    {
-    //        return $this->createQueryBuilder('m')
-    //            ->andWhere('m.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }
