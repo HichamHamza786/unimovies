@@ -62,15 +62,13 @@ class AppFixtures extends Fixture
         $manager->persist($userManager);
 
         $user = new User;
-        $user->setEmail("user@ogmail.com");
+        $user->setEmail("user@gmail.com");
         $user->setRoles(["ROLE_USER"]);
         // ici j'utilise le passwordhasher pour hasher le mot de passe par rapport à mes infos dans le security.yaml
         // ! SI PAS DE HASH, L'auth ne peut pas marcher
         $user->setPassword($this->passwordHasher->hashPassword($admin, "user"));
 
         $manager->persist($user);
-        
-        
 
         // un tableau vide pour stocker nos genre
         $genreList = [];
@@ -140,7 +138,7 @@ class AppFixtures extends Fixture
             // ici on va associer un ou des genres au film courant
             // par ex. le 1er de la liste
             // @todo à randomiser : par ex. de 1 à 3 genres au hasard
-            $movie->addGenre($genreList[0]);
+            $movie->addGenres($genreList[0]);
 
             // les saisons POUR LES SAISONS
             // @todo à randomiser : par ex. un nombre de saions au hasard avec nbres d'épisodes au hasard
@@ -168,8 +166,7 @@ class AppFixtures extends Fixture
             }
             $manager->persist($movie);
         }
-
-
+        
         $manager->flush();
     }
 }
